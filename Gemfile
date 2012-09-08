@@ -11,6 +11,7 @@ gem "hallon-openal"
 gem "backbone-on-rails"
 gem "daemons-rails"
 gem "eventmachine"
+gem "private_pub"
 gem 'foreman'
 gem 'thin'
 

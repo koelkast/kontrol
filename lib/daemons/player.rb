@@ -7,16 +7,19 @@ root = File.expand_path(File.dirname(__FILE__))
 root = File.dirname(root) until File.exists?(File.join(root, 'config'))
 require File.join(root, "config", "environment")
 
+require 'faye'
+
+$playback = Playback.new
+
+
 require 'eventmachine'
 
-playback = Playback.new
+EM.run {
+  client = Faye::Client.new('http://localhost:4000/faye')
 
-module PlayerServer
-  def receive_data(data)
-    playback.receive_message(data)
+  client.subscribe('/foo') do |message|
+    puts message.inspect
   end
-end
 
-EventMachine::run {
-  EventMachine::start_server "0.0.0.0", 4000, PlayerServer
+  client.publish('/foo', 'text' => 'Hello world')
 }
